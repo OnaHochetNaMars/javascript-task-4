@@ -4,7 +4,15 @@
  * Сделано задание на звездочку
  * Реализованы методы or и and
  */
-exports.isStar = true;
+exports.isStar = false;
+
+var FUNCTION_PRIORITY = [
+    'filterIn',
+    'sortBy',
+    'format',
+    'select',
+    'limit'
+];
 
 /**
  * Запрос к коллекции
@@ -13,7 +21,23 @@ exports.isStar = true;
  * @returns {Array}
  */
 exports.query = function (collection) {
-    return collection;
+    var friends = [];
+    for (var i = 0; i < collection.length; i++) {
+        friends[i] = collection[i];
+    }
+    var functions = [].slice.call(arguments, 1);
+    functions.sort(function (func1, func2) {
+        if (FUNCTION_PRIORITY.indexOf(func1.name) > FUNCTION_PRIORITY.indexOf(func2.name)) {
+            return 1;
+        }
+
+        return -1;
+    });
+    functions.forEach(function (func) {
+        friends = func (friends);
+    });
+
+    return friends;
 };
 
 /**
@@ -21,7 +45,23 @@ exports.query = function (collection) {
  * @params {...String}
  */
 exports.select = function () {
-    return;
+    var keys = [].slice.call(arguments);
+    var res = [];
+
+    return function select (collection) {
+        var i = 0;
+        collection.forEach(function (friend) {
+            res[i] = {};
+            keys.forEach(function (key) {
+                if ({}.hasOwnProperty.call(friend, key)) {
+                    res[i][key] = friend[key];
+                }
+            });
+            i++;
+        });
+
+        return res;
+    }
 };
 
 /**
@@ -30,9 +70,21 @@ exports.select = function () {
  * @param {Array} values – Доступные значения
  */
 exports.filterIn = function (property, values) {
-    console.info(property, values);
+    var n = values.length;
+    var res = [];
 
-    return;
+    return  function filterIn (collection) {
+        collection.forEach(function(obj) {
+            for (var i = 0; i < n; i++) {
+                if (obj[property] === values[i]) {
+                    res.push(obj);
+                    break;
+                }
+            }
+    });
+
+    return res;
+    }
 };
 
 /**
@@ -41,9 +93,24 @@ exports.filterIn = function (property, values) {
  * @param {String} order – Порядок сортировки (asc - по возрастанию; desc – по убыванию)
  */
 exports.sortBy = function (property, order) {
-    console.info(property, order);
+    var newOrder;
+    if (order === 'asc') {
+        newOrder = 1;
+    } else
+    {
+        newOrder = -1;
+    }
 
-    return;
+    return function sortBy (collection) {
+        collection.sort(function (friend1, friend2) {
+            if (friend1[property] > friend2[property]) {
+                return newOrder;
+            }
+            return -newOrder;
+        });
+
+        return collection;
+    };
 };
 
 /**
@@ -52,9 +119,14 @@ exports.sortBy = function (property, order) {
  * @param {Function} formatter – Функция для форматирования
  */
 exports.format = function (property, formatter) {
-    console.info(property, formatter);
 
-    return;
+    return function format (collection) {
+        collection.forEach(function (friend) {
+            friend[property] = formatter (friend[property]);
+        });
+
+        return collection;
+    }
 };
 
 /**
@@ -62,28 +134,10 @@ exports.format = function (property, formatter) {
  * @param {Number} count – Максимальное количество элементов
  */
 exports.limit = function (count) {
-    console.info(count);
 
-    return;
+    return function limit (collection) {
+        collection.splice(count);
+
+        return collection;
+    }
 };
-
-if (exports.isStar) {
-
-    /**
-     * Фильтрация, объединяющая фильтрующие функции
-     * @star
-     * @params {...Function} – Фильтрующие функции
-     */
-    exports.or = function () {
-        return;
-    };
-
-    /**
-     * Фильтрация, пересекающая фильтрующие функции
-     * @star
-     * @params {...Function} – Фильтрующие функции
-     */
-    exports.and = function () {
-        return;
-    };
-}
