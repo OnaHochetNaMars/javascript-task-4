@@ -14,6 +14,15 @@ var FUNCTION_PRIORITY = [
     'limit'
 ];
 
+function cloneCollection(collection) {  
+    var friends = {};  
+    for (var key in collection) {
+          friends[key] = collection[key];
+    } 
+
+    return friends; 
+}
+
 /**
  * Запрос к коллекции
  * @param {Array} collection
@@ -23,7 +32,7 @@ var FUNCTION_PRIORITY = [
 exports.query = function (collection) {
     var friends = [];
     for (var i = 0; i < collection.length; i++) {
-        friends[i] = collection[i];
+        friends[i] = cloneCollection (collection[i]);
     }
     var functions = [].slice.call(arguments, 1);
     functions.sort(function (func1, func2) {
