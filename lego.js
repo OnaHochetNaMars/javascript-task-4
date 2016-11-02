@@ -76,7 +76,7 @@ exports.filterIn = function (property, values) {
     var res = [];
 
     return function filterIn(collection) {
-        collection.forEach(function(obj) {
+        collection.forEach(function (obj) {
             for (var i = 0; i < n; i++) {
                 if (obj[property] === values[i]) {
                     res.push(obj);
