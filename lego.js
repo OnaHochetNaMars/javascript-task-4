@@ -17,10 +17,12 @@ var FUNCTION_PRIORITY = [
 function cloneCollection(collection) {
     var friend = {};
     for (var key in collection) {
-          friend[key] = collection[key];
+        if ({}.hasOwnProperty.call(collection, key)) {
+            friend[key] = collection[key];
+        }
     }
 
-    return friends;
+    return friend;
 }
 
 /**
