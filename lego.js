@@ -43,12 +43,13 @@ exports.query = function (collection) {
 /**
  * Выбор полей
  * @params {...String}
+ * @returns {Array}
  */
 exports.select = function () {
     var keys = [].slice.call(arguments);
     var res = [];
 
-    return function select (collection) {
+    return function select(collection) {
         var i = 0;
         collection.forEach(function (friend) {
             res[i] = {};
@@ -61,19 +62,20 @@ exports.select = function () {
         });
 
         return res;
-    }
+    };
 };
 
 /**
  * Фильтрация поля по массиву значений
  * @param {String} property – Свойство для фильтрации
  * @param {Array} values – Доступные значения
+ * @returns {Array}
  */
 exports.filterIn = function (property, values) {
     var n = values.length;
     var res = [];
 
-    return  function filterIn (collection) {
+    return function filterIn(collection) {
         collection.forEach(function(obj) {
             for (var i = 0; i < n; i++) {
                 if (obj[property] === values[i]) {
@@ -81,31 +83,32 @@ exports.filterIn = function (property, values) {
                     break;
                 }
             }
-    });
+        });
 
-    return res;
-    }
+        return res;
+    };
 };
 
 /**
  * Сортировка коллекции по полю
  * @param {String} property – Свойство для фильтрации
  * @param {String} order – Порядок сортировки (asc - по возрастанию; desc – по убыванию)
+ * @returns {Array}
  */
 exports.sortBy = function (property, order) {
     var newOrder;
     if (order === 'asc') {
         newOrder = 1;
-    } else
-    {
+    } else {
         newOrder = -1;
     }
 
-    return function sortBy (collection) {
+    return function sortBy(collection) {
         collection.sort(function (friend1, friend2) {
             if (friend1[property] > friend2[property]) {
                 return newOrder;
             }
+
             return -newOrder;
         });
 
@@ -117,27 +120,29 @@ exports.sortBy = function (property, order) {
  * Форматирование поля
  * @param {String} property – Свойство для фильтрации
  * @param {Function} formatter – Функция для форматирования
+ * @returns {Array}
  */
 exports.format = function (property, formatter) {
 
-    return function format (collection) {
+    return function format(collection) {
         collection.forEach(function (friend) {
             friend[property] = formatter (friend[property]);
         });
 
         return collection;
-    }
+    };
 };
 
 /**
  * Ограничение количества элементов в коллекции
  * @param {Number} count – Максимальное количество элементов
+ * @returns {Array}
  */
 exports.limit = function (count) {
 
-    return function limit (collection) {
+    return function limit(collection) {
         collection.splice(count);
 
         return collection;
-    }
+    };
 };
