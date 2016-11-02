@@ -9,8 +9,8 @@ exports.isStar = false;
 var FUNCTION_PRIORITY = [
     'filterIn',
     'sortBy',
-    'format',
     'select',
+    'format',
     'limit'
 ];
 
@@ -128,7 +128,9 @@ exports.format = function (property, formatter) {
 
     return function format(collection) {
         collection.forEach(function (friend) {
-            friend[property] = formatter (friend[property]);
+            if ({}.hasOwnProperty.call(friend, property)) {
+                friend[property] = formatter (friend[property]);
+            }
         });
 
         return collection;
