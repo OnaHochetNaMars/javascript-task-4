@@ -14,13 +14,13 @@ var FUNCTION_PRIORITY = [
     'limit'
 ];
 
-function cloneCollection(collection) {  
-    var friends = {};  
+function cloneCollection(collection) {
+    var friend = {};
     for (var key in collection) {
-          friends[key] = collection[key];
-    } 
+          friend[key] = collection[key];
+    }
 
-    return friends; 
+    return friends;
 }
 
 /**
@@ -35,6 +35,9 @@ exports.query = function (collection) {
         friends[i] = cloneCollection (collection[i]);
     }
     var functions = [].slice.call(arguments, 1);
+    if (functions.length === 0) {
+        return collection;
+    }
     functions.sort(function (func1, func2) {
         if (FUNCTION_PRIORITY.indexOf(func1.name) > FUNCTION_PRIORITY.indexOf(func2.name)) {
             return 1;
