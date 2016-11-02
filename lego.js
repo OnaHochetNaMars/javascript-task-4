@@ -58,7 +58,9 @@ exports.select = function () {
                     res[i][key] = friend[key];
                 }
             });
-            i++;
+            if (!(Object.keys(res[i]).length === 0)) {
+                i++;
+            }
         });
 
         return res;
