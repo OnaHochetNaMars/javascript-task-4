@@ -59,14 +59,14 @@ exports.select = function () {
 
     return function select(collection) {
         var selectCollection = collection.map(function (friend) {
-            var res = {};
+            var result = {};
             keys.forEach(function (key) {
                 if (friend[key]) {
-                    res[key] = friend[key];
+                    result[key] = friend[key];
                 }
             });
 
-            return res;
+            return result;
         });
 
         return selectCollection;
@@ -82,7 +82,8 @@ exports.select = function () {
 exports.filterIn = function (property, values) {
 
     return function filterIn(collection) {
-        var filterCollection = collection.filter(function (friend) {
+
+        return collection.filter(function (friend) {
             for (var i = 0; i < values.length; i++) {
                 if (friend[property] === values[i]) {
                     return true;
@@ -91,8 +92,6 @@ exports.filterIn = function (property, values) {
 
             return false;
         });
-
-        return filterCollection;
     };
 };
 
