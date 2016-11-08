@@ -58,17 +58,18 @@ exports.select = function () {
     var keys = [].slice.call(arguments);
 
     return function select(collection) {
-        var res = [];
-        collection.map(function (friend, index) {
-            res[index] = {};
+        var selectCollection = collection.map(function (friend) {
+            var res = {};
             keys.forEach(function (key) {
                 if (friend[key]) {
-                    res[index][key] = friend[key];
+                    res[key] = friend[key];
                 }
             });
+            
+            return res;
         });
 
-        return res;
+        return selectCollection;
     };
 };
 
