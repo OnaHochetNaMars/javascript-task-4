@@ -65,7 +65,7 @@ exports.select = function () {
                     res[key] = friend[key];
                 }
             });
-            
+
             return res;
         });
 
