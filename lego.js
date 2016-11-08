@@ -127,9 +127,7 @@ exports.format = function (property, formatter) {
 
     return function format(collection) {
         collection.forEach(function (friend) {
-            // if ({}.hasOwnProperty.call(friend, property)) {
             friend[property] = formatter (friend[property]);
-            // }
         });
 
         return collection;
