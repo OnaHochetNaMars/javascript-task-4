@@ -18,8 +18,8 @@ function cloneFriend(collection) {
     var friend = {};
     var keys = Object.keys(collection);
     keys.forEach(function (key) {
-            friend[key] = collection[key];
-        });
+        friend[key] = collection[key];
+    });
 
     return friend;
 }
@@ -91,6 +91,8 @@ exports.filterIn = function (property, values) {
                     return true;
                 }
             }
+
+            return false;
         });
 
         return filterCollection;
@@ -101,7 +103,7 @@ exports.filterIn = function (property, values) {
  * Сортировка коллекции по полю
  * @param {String} property – Свойство для фильтрации
  * @param {String} order – Порядок сортировки (asc - по возрастанию; desc – по убыванию)
- * @returns {Array}
+ * @returns {Function}
  */
 exports.sortBy = function (property, order) {
 
