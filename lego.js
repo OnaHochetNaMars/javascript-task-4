@@ -56,20 +56,16 @@ exports.query = function (collection) {
  */
 exports.select = function () {
     var keys = [].slice.call(arguments);
-    var res = [];
 
     return function select(collection) {
-        var i = 0;
-        collection.forEach(function (friend) {
-            res[i] = {};
+        var res = [];
+        collection.map(function (friend, index) {
+            res[index] = {};
             keys.forEach(function (key) {
-                if ({}.hasOwnProperty.call(friend, key)) {
-                    res[i][key] = friend[key];
+                if (friend[key]) {
+                    res[index][key] = friend[key];
                 }
             });
-            if (!(Object.keys(res[i]) === [])) {
-                i++;
-            }
         });
 
         return res;
