@@ -112,6 +112,7 @@ exports.sortBy = function (property, order) {
             if (friend1[property] > friend2[property]) {
                 return order === 'asc';
             }
+
             return order === 'desc';
         });
 
