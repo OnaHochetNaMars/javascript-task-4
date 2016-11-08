@@ -14,13 +14,12 @@ var FUNCTION_PRIORITY = [
     'limit'
 ];
 
-function cloneCollection(collection) {
+function cloneFriend(collection) {
     var friend = {};
-    for (var key in collection) {
-        if ({}.hasOwnProperty.call(collection, key)) {
+    var keys = Object.keys(collection);
+    keys.forEach(function (key) {
             friend[key] = collection[key];
-        }
-    }
+        });
 
     return friend;
 }
@@ -34,18 +33,14 @@ function cloneCollection(collection) {
 exports.query = function (collection) {
     var friends = [];
     for (var i = 0; i < collection.length; i++) {
-        friends[i] = cloneCollection (collection[i]);
+        friends[i] = cloneFriend (collection[i]);
     }
     var functions = [].slice.call(arguments, 1);
     if (functions.length === 0) {
         return collection;
     }
     functions.sort(function (func1, func2) {
-        if (FUNCTION_PRIORITY.indexOf(func1.name) > FUNCTION_PRIORITY.indexOf(func2.name)) {
-            return 1;
-        }
-
-        return -1;
+        return FUNCTION_PRIORITY.indexOf(func1.name) > FUNCTION_PRIORITY.indexOf(func2.name);
     });
     functions.forEach(function (func) {
         friends = func (friends);
@@ -72,7 +67,7 @@ exports.select = function () {
                     res[i][key] = friend[key];
                 }
             });
-            if (!(Object.keys(res[i]).length === 0)) {
+            if (!(Object.keys(res[i]) === [])) {
                 i++;
             }
         });
@@ -88,20 +83,17 @@ exports.select = function () {
  * @returns {Array}
  */
 exports.filterIn = function (property, values) {
-    var n = values.length;
-    var res = [];
 
     return function filterIn(collection) {
-        collection.forEach(function (obj) {
-            for (var i = 0; i < n; i++) {
-                if (obj[property] === values[i]) {
-                    res.push(obj);
-                    break;
+        var filterCollection = collection.filter(function (friend) {
+            for (var i = 0; i < values.length; i++) {
+                if (friend[property] === values[i]) {
+                    return true;
                 }
             }
         });
 
-        return res;
+        return filterCollection;
     };
 };
 
@@ -112,20 +104,12 @@ exports.filterIn = function (property, values) {
  * @returns {Array}
  */
 exports.sortBy = function (property, order) {
-    var newOrder;
-    if (order === 'asc') {
-        newOrder = 1;
-    } else {
-        newOrder = -1;
-    }
 
     return function sortBy(collection) {
         collection.sort(function (friend1, friend2) {
             if (friend1[property] > friend2[property]) {
-                return newOrder;
+                return order === 'asc';
             }
-
-            return -newOrder;
         });
 
         return collection;
@@ -142,9 +126,9 @@ exports.format = function (property, formatter) {
 
     return function format(collection) {
         collection.forEach(function (friend) {
-            if ({}.hasOwnProperty.call(friend, property)) {
-                friend[property] = formatter (friend[property]);
-            }
+            // if ({}.hasOwnProperty.call(friend, property)) {
+            friend[property] = formatter (friend[property]);
+            // }
         });
 
         return collection;
