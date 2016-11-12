@@ -10,18 +10,17 @@ var FUNCTION_PRIORITY = [
     'filterIn',
     'sortBy',
     'select',
-    'format',
-    'limit'
+    'limit',
+    'format'
 ];
 
-function cloneFriend(collection) {
-    var friend = {};
-    var keys = Object.keys(collection);
-    keys.forEach(function (key) {
-        friend[key] = collection[key];
-    });
+function cloneFriend(friend) {
 
-    return friend;
+    return Object.keys(friend).reduce (function (result, key) {
+        result[key] = friend[key];
+
+        return result;
+    }, {})
 }
 
 /**
@@ -31,10 +30,9 @@ function cloneFriend(collection) {
  * @returns {Array}
  */
 exports.query = function (collection) {
-    var friends = [];
-    for (var i = 0; i < collection.length; i++) {
-        friends[i] = cloneFriend (collection[i]);
-    }
+    var friends = collection.map(function (friend) {
+        return cloneFriend(friend);
+    });
     var functions = [].slice.call(arguments, 1);
     if (functions.length === 0) {
         return collection;
@@ -42,11 +40,11 @@ exports.query = function (collection) {
     functions.sort(function (func1, func2) {
         return FUNCTION_PRIORITY.indexOf(func1.name) > FUNCTION_PRIORITY.indexOf(func2.name);
     });
-    functions.forEach(function (func) {
-        friends = func (friends);
-    });
 
-    return friends;
+    return functions.reduce(function (prevResult, func) {
+
+        return func(prevResult);
+    }, friends);
 };
 
 /**
@@ -58,18 +56,15 @@ exports.select = function () {
     var keys = [].slice.call(arguments);
 
     return function select(collection) {
-        var selectCollection = collection.map(function (friend) {
-            var result = {};
-            keys.forEach(function (key) {
-                if (friend[key]) {
-                    result[key] = friend[key];
-                }
-            });
 
-            return result;
+        return collection.map(function (friend) {
+
+            return keys.reduce(function (result, key) {
+                result[key] = friend[key];
+
+                return result;
+            }, {})
         });
-
-        return selectCollection;
     };
 };
 
@@ -84,13 +79,11 @@ exports.filterIn = function (property, values) {
     return function filterIn(collection) {
 
         return collection.filter(function (friend) {
-            for (var i = 0; i < values.length; i++) {
-                if (friend[property] === values[i]) {
-                    return true;
-                }
-            }
 
-            return false;
+            return values.some(function (value) {
+
+                return value === friend[property];
+            });
         });
     };
 };
@@ -104,15 +97,12 @@ exports.filterIn = function (property, values) {
 exports.sortBy = function (property, order) {
 
     return function sortBy(collection) {
-        collection.sort(function (friend1, friend2) {
-            if (friend1[property] > friend2[property]) {
-                return order === 'asc';
-            }
 
-            return order === 'desc';
+        return collection.sort(function (friend1, friend2) {
+
+            return friend1[property] > friend2[property] ? 
+                order === 'asc' : order === 'desc';
         });
-
-        return collection;
     };
 };
 
@@ -125,11 +115,12 @@ exports.sortBy = function (property, order) {
 exports.format = function (property, formatter) {
 
     return function format(collection) {
-        collection.forEach(function (friend) {
-            friend[property] = formatter (friend[property]);
-        });
 
-        return collection;
+        return collection.map(function (friend) {
+            friend[property] = formatter (friend[property]);
+
+            return friend;
+        });
     };
 };
 
@@ -141,8 +132,7 @@ exports.format = function (property, formatter) {
 exports.limit = function (count) {
 
     return function limit(collection) {
-        collection.splice(count);
 
-        return collection;
+        return collection.slice(0, count);
     };
 };
