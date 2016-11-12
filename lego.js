@@ -20,7 +20,7 @@ function cloneFriend(friend) {
         result[key] = friend[key];
 
         return result;
-    }, {})
+    }, {});
 }
 
 /**
@@ -63,7 +63,7 @@ exports.select = function () {
                 result[key] = friend[key];
 
                 return result;
-            }, {})
+            }, {});
         });
     };
 };
@@ -100,8 +100,7 @@ exports.sortBy = function (property, order) {
 
         return collection.sort(function (friend1, friend2) {
 
-            return friend1[property] > friend2[property] ? 
-                order === 'asc' : order === 'desc';
+            return friend1[property] > friend2[property] ? order === 'asc' : order === 'desc';
         });
     };
 };
