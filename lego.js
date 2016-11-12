@@ -60,7 +60,9 @@ exports.select = function () {
         return collection.map(function (friend) {
 
             return keys.reduce(function (result, key) {
-                result[key] = friend[key];
+                if (friend[key]) {
+                    result[key] = friend[key];
+                }
 
                 return result;
             }, {});
