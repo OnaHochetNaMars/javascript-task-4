@@ -68,7 +68,6 @@ exports.select = function () {
  * @returns {Function}
  */
 exports.filterIn = function (property, values) {
-
     return function filterIn(collection) {
         return collection.filter(function (friend) {
             return values.some(function (value) {
@@ -85,7 +84,6 @@ exports.filterIn = function (property, values) {
  * @returns {Function}
  */
 exports.sortBy = function (property, order) {
-
     return function sortBy(collection) {
         return collection.sort(function (friend1, friend2) {
             return friend1[property] > friend2[property] ? order === 'asc' : order === 'desc';
@@ -100,7 +98,6 @@ exports.sortBy = function (property, order) {
  * @returns {Function}
  */
 exports.format = function (property, formatter) {
-
     return function format(collection) {
         collection.forEach(function (friend) {
             friend[property] = formatter (friend[property]);
@@ -118,7 +115,6 @@ exports.format = function (property, formatter) {
  * @returns {Array}
  */
 exports.limit = function (count) {
-
     return function limit(collection) {
         return collection.slice(0, count);
     };
