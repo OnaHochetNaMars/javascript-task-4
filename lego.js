@@ -15,7 +15,6 @@ var FUNCTION_PRIORITY = [
 ];
 
 function cloneFriend(friend) {
-
     return Object.keys(friend).reduce(function (result, key) {
         result[key] = friend[key];
 
