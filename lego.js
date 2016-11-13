@@ -16,8 +16,9 @@ var FUNCTION_PRIORITY = [
 
 function cloneFriend(friend) {
 
-    return Object.keys(friend).reduce (function (result, key) {
+    return Object.keys(friend).reduce(function (result, key) {
         result[key] = friend[key];
+
         return result;
     }, {});
 }
@@ -54,6 +55,7 @@ exports.select = function () {
                 if (friend.hasOwnProperty(key)) {
                     result[key] = friend[key];
                 }
+
                 return result;
             }, {});
         });
@@ -103,6 +105,7 @@ exports.format = function (property, formatter) {
     return function format(collection) {
         collection.forEach(function (friend) {
             friend[property] = formatter (friend[property]);
+
             return friend;
         });
 
