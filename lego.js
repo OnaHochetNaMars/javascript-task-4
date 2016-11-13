@@ -100,9 +100,9 @@ exports.sortBy = function (property, order) {
 exports.format = function (property, formatter) {
     return function format(collection) {
         collection.forEach(function (friend) {
-            friend[property] = formatter (friend[property]);
-
-            return friend;
+            if (friend.hasOwnProperty(property)) {
+                friend[property] = formatter (friend[property]);
+            }
         });
 
         return collection;
